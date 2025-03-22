@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Text Analysis Tool</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --info: #2196f3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #f1f3f5;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .subtitle {
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+            padding-bottom: 10px;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .flex-item {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        
+        textarea {
+            height: 220px;
+            resize: vertical;
+        }
+        
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .source {
+            background-color: var(--gray-light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .source-header {
+            margin-bottom: 10px;
+        }
+        
+        .button {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .button-secondary {
+            background-color: var(--info);
+        }
+        
+        .button-secondary:hover {
+            background-color: #0b7dda;
+        }
+        
+        .button-danger {
+            background-color: var(--danger);
+        }
+        
+        .button-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .button-sm {
+            padding: 5px 10px;
+            font-size: 0.85rem;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .mt-20 {
+            margin-top: 20px;
+        }
+        
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            border-bottom: 1px solid #ddd;
+            gap: 5px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            background-color: var(--gray-light);
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            background-color: white;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .result-item {
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .similarity-meter {
+            height: 10px;
+            background-color: var(--gray-light);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .similarity-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease-in-out;
+        }
+        
+        .plagiarism-fill {
+            background-color: var(--danger);
+        }
+        
+        .ai-fill {
+            background-color: var(--info);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background-color: var(--gray-light);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+        .common-phrases {
+            background-color: var(--gray-light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+        
+        .phrase {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #ffe0e0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .feature-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .feature-name {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .feature-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .reason-item {
+            background-color: #e8f4fd;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+        }
+        
+        .confidence-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .confidence-low {
+            background-color: #ffe0e0;
+            color: var(--danger);
+        }
+        
+        .confidence-medium {
+            background-color: #fff0c2;
+            color: var(--warning);
+        }
+        
+        .confidence-high {
+            background-color: #e0f7e0;
+            color: var(--success);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .delete-source {
+            background-color: transparent;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        
+        .delete-source:hover {
+            transform: scale(1.2);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(67, 97, 238, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+   
+      
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .tabs {
+                justify-content: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+            }
+            
+            .button {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Text Analysis Tool</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-magnifying-glass-chart"></i>
+                        <div>
+                            <h1>Text plagiarism Analysing Tool</h1>
+                            <p class="subtitle">Analyze text for potential plagiarism detection</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        <div class="container">
+            <div class="flex-container">
+                <div class="flex-item">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-file-lines"></i> Text to Analyze</h2>
+                        </div>
+                        <div class="input-group">
+                            <textarea id="suspect-text" placeholder="Paste the text you want to analyze for plagiarism..."></textarea>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="flex-item">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-book"></i> Source Texts</h2>
+                            <button id="add-source" class="button button-secondary">
+                                <i class="fas fa-plus"></i> Add Source
+                            </button>
+                        </div>
+                        <div id="source-texts">
+                            <div class="source" id="source-1">
+                                <div class="source-header">
+                                    <div class="input-group">
+                                        <input type="text" class="source-name" placeholder="Source name" value="Source 1">
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <textarea class="source-content" placeholder="Paste a potential source text here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="center mt-20">
+                <button id="analyze-btn" class="button">
+                    <i class="fas fa-microscope"></i> Analyze Text
+                </button>
+            </div>
+    
+            <div id="results" class="mt-20"></div>
+        </div>
+    
+        <footer class="footer">
+            <div class="container">
+                <p>Text Analysis Tool &copy; 2025. All rights reserved.</p>
+            </div>
+        </footer>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add source button
+            document.getElementById('add-source').addEventListener('click', function() {
+                const sourceTexts = document.getElementById('source-texts');
+                const sourceCount = sourceTexts.getElementsByClassName('source').length + 1;
+                
+                const sourceDiv = document.createElement('div');
+                sourceDiv.className = 'source';
+                sourceDiv.id = `source-${sourceCount}`;
+                sourceDiv.innerHTML = `
+                    <div class="source-header">
+                        <div class="input-group">
+                            <input type="text" class="source-name" placeholder="Source name" value="Source ${sourceCount}">
+                        </div>
+                        <button class="delete-source" data-id="${sourceCount}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="input-group">
+                        <textarea class="source-content" placeholder="Paste a potential source text here..."></textarea>
+                    </div>
+                `;
+                
+                sourceTexts.appendChild(sourceDiv);
+                
+                // Add event listener to the new delete button
+                sourceDiv.querySelector('.delete-source').addEventListener('click', function() {
+                    const sourceId = this.getAttribute('data-id');
+                    const sourceElement = document.getElementById(`source-${sourceId}`);
+                    sourceElement.remove();
+                });
+            });
+            
+            // Initialize delete source for the first source
+            if (document.querySelector('.delete-source')) {
+                document.querySelectorAll('.delete-source').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const sourceId = this.getAttribute('data-id');
+                        const sourceElement = document.getElementById(`source-${sourceId}`);
+                        
+                        // Only delete if there's more than one source
+                        if (document.getElementsByClassName('source').length > 1) {
+                            sourceElement.remove();
+                        } else {
+                            alert('You need at least one source text.');
+                        }
+                    });
+                });
+            }
+            
+            // Analyze button
+            document.getElementById('analyze-btn').addEventListener('click', function() {
+                const suspectText = document.getElementById('suspect-text').value.trim();
+                if (!suspectText) {
+                    alert('Please enter the text you want to analyze');
+                    return;
+                }
+                
+                const sources = document.getElementsByClassName('source');
+                const sourceTexts = {};
+                
+                for (const source of sources) {
+                    const name = source.querySelector('.source-name').value.trim() || 'Unnamed Source';
+                    const content = source.querySelector('.source-content').value.trim();
+                    
+                    if (content) {
+                        sourceTexts[name] = content;
+                    }
+                }
+                
+                if (Object.keys(sourceTexts).length === 0) {
+                    alert('Please add at least one source text with content');
+                    return;
+                }
+                
+                // Show loading indicator
+                document.getElementById('results').innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p class="mt-20">Analyzing your text...</p>
+                    </div>
+                `;
+                
+                // Send data to the server
+                fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        suspect_text: suspectText,
+                        source_texts: sourceTexts
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data.plagiarism_results, data.ai_analysis);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('results').innerHTML = `
+                        <div class="card">
+                            <div class="center">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--warning); margin-bottom: 15px;"></i>
+                                <h2>Error Analyzing Text</h2>
+                                <p>There was a problem processing your request. Please try again.</p>
+                                <button onclick="window.location.reload()" class="button mt-20">
+                                    <i class="fas fa-redo"></i> Try Again
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+            
+            function displayResults(plagiarismResults, aiAnalysis) {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+                        </div>
+                        
+                        <div class="tabs">
+                            <div class="tab active" data-tab="plagiarism">
+                                <i class="fas fa-copy"></i> Plagiarism Detection
+                            </div>
+                           
+                        </div>
+                        
+                        <div id="plagiarism-content" class="tab-content active"></div>
+            
+                    </div>
+                `;
+                
+                const plagiarismContent = document.getElementById('plagiarism-content');
+                const aiContent = document.getElementById('ai-content');
+                
+                // Populate Plagiarism Results
+                if (plagiarismResults.length === 0) {
+                    plagiarismContent.innerHTML = '<p class="center">No plagiarism results found.</p>';
+                } else {
+                    plagiarismResults.forEach((result, index) => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'result-item';
+                        
+                        // Create badge for similarity level
+                        let similarityClass = 'success';
+                        let similarityText = 'Low Similarity';
+                        
+                        if (result.overall_similarity > 40) {
+                            similarityClass = 'warning';
+                            similarityText = 'Moderate Similarity';
+                        }
+                        if (result.overall_similarity > 70) {
+                            similarityClass = 'danger';
+                            similarityText = 'High Similarity';
+                        }
+                        
+                        resultItem.innerHTML = `
+                            <div class="result-header">
+                                <h3><i class="fas fa-book"></i> ${result.source_name}</h3>
+                                <span class="confidence-badge confidence-${similarityClass === 'success' ? 'high' : similarityClass === 'warning' ? 'medium' : 'low'}">
+                                    ${similarityText}
+                                </span>
+                            </div>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div>Overall Similarity</div>
+                                    <div class="stat-value">${result.overall_similarity}%</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div>Phrase Matching</div>
+                                    <div class="stat-value">${result.jaccard_similarity}%</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div>Word Frequency</div>
+                                    <div class="stat-value">${result.cosine_similarity}%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="similarity-meter">
+                                <div class="similarity-fill plagiarism-fill" style="width: 0%"></div>
+                            </div>
+                        `;
+                        
+                        if (result.common_phrases.length > 0) {
+                            const phrasesDiv = document.createElement('div');
+                            phrasesDiv.className = 'common-phrases';
+                            phrasesDiv.innerHTML = '<h4><i class="fas fa-quote-left"></i> Common Phrases:</h4>';
+                            
+                            const phrasesContainer = document.createElement('div');
+                            phrasesContainer.style.marginTop = '10px';
+                            
+                            result.common_phrases.forEach(phrase => {
+                                const phraseSpan = document.createElement('span');
+                                phraseSpan.className = 'phrase';
+                                phraseSpan.textContent = phrase;
+                                phrasesContainer.appendChild(phraseSpan);
+                            });
+                            
+                            phrasesDiv.appendChild(phrasesContainer);
+                            resultItem.appendChild(phrasesDiv);
+                        }
+                        
+                        plagiarismContent.appendChild(resultItem);
+                        
+                        // Animate similarity meter
+                        setTimeout(() => {
+                            resultItem.querySelector('.similarity-fill').style.width = `${result.overall_similarity}%`;
+                        }, 100 + index * 200);
+                    });
+                }
+                
+                // Populate AI Detection Results
+                const aiResultItem = document.createElement('div');
+                aiResultItem.className = 'result-item';
+              
+            }
+        });
+    </script>
+</body>
+</html>
