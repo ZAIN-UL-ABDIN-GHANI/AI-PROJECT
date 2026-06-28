@@ -144,13 +144,6 @@ Full list in `requirements.txt`.
 | 40–70% | Moderate Similarity | 🟡 Yellow |
 | 70–100% | High Similarity | 🔴 Red |
 
----
-
-## 📸 Screenshots
-
-> *(Add screenshots of the UI here after running the app)*
-
----
 
 ## 🤝 Contributing
 
